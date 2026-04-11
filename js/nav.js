@@ -555,6 +555,18 @@
     if (footerEl) footerEl.innerHTML = buildFooter();
     if (rightEl)  rightEl.innerHTML  = buildRightSidebar();
 
+    // Inject lightbox once
+    if (!document.getElementById('lightbox')) {
+      const lb = document.createElement('div');
+      lb.id = 'lightbox';
+      lb.innerHTML = '<img id="lightbox-img" src="" alt="">';
+      document.body.appendChild(lb);
+      lb.addEventListener('click', function() {
+        lb.classList.remove('open');
+        document.getElementById('lightbox-img').src = '';
+      });
+    }
+
     // Wire up interactions
     attachNavListeners();
     attachHamburger();

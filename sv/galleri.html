@@ -24,7 +24,7 @@
             if (container.dataset.loaded) return;
             container.dataset.loaded = 'true';
             try {
-              const res  = await fetch('../images/gallery.json');
+              const res = await fetch('/images/gallery.json');
               const data = await res.json();
               let html   = '';
 
@@ -82,6 +82,7 @@
               });
 
             } catch(e) {
+              console.error('Gallery error:', e);
               container.innerHTML = '<p style="color:#c00;">Kunde inte ladda galleriet.</p>';
             }
           }
@@ -103,8 +104,5 @@
     const CURRENT_PAGE = 'galleri';
   </script>
   <script src="../js/nav.js"></script>
-  <div id="lightbox">
-    <img id="lightbox-img" src="" alt="">
-  </div>
 </body>
 </html>
