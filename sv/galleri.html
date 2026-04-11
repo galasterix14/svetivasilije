@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilder & Arkiv – Serbisk Ortodoxa Kyrkan Helsingborg</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="page-wrapper">
+    <header id="site-header"></header>
+    <div id="body-layout">
+      <nav id="site-nav"></nav>
+      <main id="main-content">
+        <div id="gallery-container">
+          <p style="color:#aaa; font-style:italic;">Laddar galleri...</p>
+        </div>
+
+        <script>
+        (function() {
+          async function loadGallery() {
+            const container = document.getElementById('gallery-container');
+            if (!container) return;
+            if (container.dataset.loaded) return;
+            container.dataset.loaded = 'true';
+            try {
+              const res  = await fetch('../images/gallery.json');
+              const data = await res.json();
+              let html   = '';
+
+              for (const [album, images] of Object.entries(data)) {
+                const imgs = images.map(src =>
+                  `<img src="../images/${encodeURIComponent(src).replace(/%2F/g,'/')}" 
+                      alt="${album}" loading="lazy">`
+                ).join('');
+
+                html += `
+                  <div class="gallery-event">
+                    <div class="gallery-event-header">
+                      <span class="gallery-event-date"></span>
+                      <span class="gallery-event-name">${album}</span>
+                      <span class="gallery-event-arrow">&#9658;</span>
+                    </div>
+                    <div class="gallery-event-body">
+                      <div class="gallery-grid">${imgs}</div>
+                    </div>
+                  </div>`;
+              }
+
+              container.innerHTML = html;
+
+              container.addEventListener('click', function(e) {
+                const header = e.target.closest('.gallery-event-header');
+                if (!header) return;
+                const clicked = header.closest('.gallery-event');
+                const isOpen  = clicked.classList.contains('open');
+
+                // Close all open albums
+                container.querySelectorAll('.gallery-event.open').forEach(el => {
+                  el.classList.remove('open');
+                });
+
+                // If it wasn't open before, open it
+                if (!isOpen) {
+                  clicked.classList.add('open');
+                }
+              });
+
+              const lightbox    = document.getElementById('lightbox');
+              const lightboxImg = document.getElementById('lightbox-img');
+
+              container.addEventListener('click', function(e) {
+                const img = e.target.closest('.gallery-grid img');
+                if (!img) return;
+                lightboxImg.src = img.src;
+                lightbox.classList.add('open');
+              });
+
+              lightbox.addEventListener('click', function() {
+                lightbox.classList.remove('open');
+                lightboxImg.src = '';
+              });
+
+            } catch(e) {
+              container.innerHTML = '<p style="color:#c00;">Kunde inte ladda galleriet.</p>';
+            }
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadGallery);
+          } else {
+            loadGallery();
+          }
+        })();
+        </script>
+      </main>
+      <aside id="right-sidebar"></aside>
+    </div>
+    <footer id="site-footer"></footer>
+  </div>
+  <script>
+    const LANG         = 'sv';
+    const CURRENT_PAGE = 'galleri';
+  </script>
+  <script src="../js/nav.js"></script>
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+</body>
+</html>

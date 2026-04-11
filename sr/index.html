@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Почетна – Serbisk Ortodoxa Kyrkan Helsingborg</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="page-wrapper">
+    <header id="site-header"></header>
+    <div id="body-layout">
+      <nav id="site-nav"></nav>
+      <main id="main-content">
+        <div class="page-heading">
+          <span class="heading-cross"></span>
+          <h2>Почетна</h2>
+        </div>
+        <!-- Add your content here -->
+                <div class="week-grid">
+          <div>
+          <div id="this-week-container"></div>
+
+          <script>
+          (function() {
+            const DAYS = ['Недеља','Понедељак','Уторак','Среда','Четвртак','Петак','Субота'];
+
+            function loadThisWeek() {
+              const container = document.getElementById('this-week-container');
+              if (!container) return;
+              const data = window.SCHEDULE_DATA || [];
+
+              const now     = new Date();
+              const monday  = new Date(now);
+              monday.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1));
+              monday.setHours(0,0,0,0);
+              const sunday = new Date(monday);
+              sunday.setDate(monday.getDate() + 6);
+              sunday.setHours(23,59,59,999);
+
+              const entries = data.filter(e => {
+                const d = new Date(e.date);
+                return d >= monday && d <= sunday;
+              });
+
+              if (entries.length === 0) {
+                container.innerHTML = `
+                  <h3>Богослужења ове недеље</h3>
+                  <p style="color:#888; font-size:0.88rem;">Нема богослужења ове недеље.</p>`;
+                return;
+              }
+
+              let rows_html = '';
+              entries.forEach(e => {
+                const d       = new Date(e.date);
+                const dayName = DAYS[d.getDay()];
+                const dateStr = e.date.slice(8,10) + '/' + e.date.slice(5,7);
+                rows_html += `<tr>
+                  <td>${dateStr}</td>
+                  <td>${dayName}</td>
+                  <td>${e.service_sr}</td>
+                  <td>${e.time}</td>
+                </tr>`;
+              });
+
+              container.innerHTML = `
+                <h3>Богослужења ове недеље</h3>
+                <div class="schedule-table-wrap">
+                  <table class="schedule-table">
+                    <thead>
+                      <tr><th>Датум</th><th>Дан</th><th>Богослужење</th><th>Почетак</th></tr>
+                    </thead>
+                    <tbody>${rows_html}</tbody>
+                  </table>
+                </div>`;
+            }
+
+            window.loadThisWeekSr = loadThisWeek;
+          })();
+          </script>
+          </div>
+          <div>
+          <div id="week-hours-container"></div>
+
+          <script>
+          (function() {
+            const DAYS_SR = ['Недеља','Понедељак','Уторак','Среда','Четвртак','Петак','Субота'];
+
+            function getWeekHours() {
+              const now       = new Date();
+              const todayIdx  = now.getDay(); // 0=Sun
+
+              // Build Mon–Sun for current week
+              const days = [];
+              for (let i = 1; i <= 7; i++) {
+                const d = new Date(now);
+                const diff = i === 7 ? (7 - todayIdx) : (i - todayIdx);
+                d.setDate(now.getDate() + (i <= todayIdx ? i - todayIdx : i - todayIdx));
+                // Simpler: build from Monday
+                const monday = new Date(now);
+                monday.setDate(now.getDate() - (todayIdx === 0 ? 6 : todayIdx - 1));
+                monday.setHours(0,0,0,0);
+                const day = new Date(monday);
+                day.setDate(monday.getDate() + (i - 1));
+                days.push(day);
+              }
+
+              let rows = '';
+              days.forEach(day => {
+                const dateStr = day.getFullYear() + '-' +
+                  String(day.getMonth() + 1).padStart(2, '0') + '-' +
+                  String(day.getDate()).padStart(2, '0');
+                const dayNum  = day.getDay();
+                const dayName = DAYS_SR[dayNum];
+                const dateLabel = day.getDate() + '/' + String(day.getMonth() + 1).padStart(2,'0');
+                const isToday = day.toDateString() === now.toDateString();
+
+                let hours;
+                if (SPECIAL_HOURS[dateStr]) {
+                  const s = SPECIAL_HOURS[dateStr];
+                  hours = `${s.open}–${s.close}`;
+                } else if (dayNum === 0) {
+                  hours = '08:00–14:00';
+                } else if (dayNum === 6) {
+                  hours = '12:00–18:00';
+                } else {
+                  hours = '12:00–17:00';
+                }
+
+                const trStyle  = isToday ? ' style="background:#fff8ec; font-weight:600;"' : '';
+                const dateCell = isToday
+                  ? `<td style="border-left:3px solid var(--gold); padding-left:7px;">${dateLabel}</td>`
+                  : `<td>${dateLabel}</td>`;
+                const isMobile  = window.innerWidth <= 600;
+                const todayMark = isToday ? (isMobile ? '▶ ' : ' ◀') : '';
+
+                rows += `<tr${trStyle}>
+                  ${dateCell}
+                  <td>${dayName}</td>
+                  <td>${isMobile ? todayMark : ''}${hours}${isMobile ? '' : todayMark}</td>
+                </tr>`;
+              });
+
+              document.getElementById('week-hours-container').innerHTML = `
+                <h3>Отворено ове недеље</h3>
+                <div class="schedule-table-wrap">
+                  <table class="schedule-table">
+                    <thead>
+                      <tr>
+                        <th>Датум</th>
+                        <th>Дан</th>
+                        <th>Отворено</th>
+                      </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                  </table>
+                </div>`;
+            }
+
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', getWeekHours);
+            } else {
+              getWeekHours();
+            }
+          })();
+          </script>
+          </div>
+        </div> 
+      </main>
+      <aside id="right-sidebar"></aside>
+    </div>
+    <footer id="site-footer"></footer>
+  </div>
+  <script>
+    const LANG         = 'sr';
+    const CURRENT_PAGE = 'home';
+  </script>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

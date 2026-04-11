@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сербиск Ортодокса Кирка – Хелсингборг / Serbisk Ortodoxa Kyrka – Helsingborg</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+    body {
+    background-image: url('images/bakgrundvitgra.gif');
+    background-repeat: repeat;
+    background-size: auto;
+    }
+
+    #landing-box {
+      background: var(--sidebar-mid, #821218);
+      border: 2px solid var(--gold, #c9a84c);
+      max-width: 560px;
+      width: 90%;
+      padding: 32px 28px 28px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+
+    #landing-box .welcome-sr {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.95rem;
+      color: var(--gold, #c9a84c);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    #landing-box .welcome-sv {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.95rem;
+      color: var(--gold-dim, #9a7a32);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    #landing-box .banner {
+      width: 100%;
+      max-width: 480px;
+      border: 1px solid var(--gold-dim, #9a7a32);
+      margin: 0 auto 22px;
+      display: block;
+    }
+
+    .lang-choices {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 8px;
+    }
+
+    .lang-choice {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .lang-choice:hover { opacity: 0.8; }
+
+    .lang-choice .flag-emoji {
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+
+    .lang-choice span {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gold, #c9a84c);
+      letter-spacing: 0.05em;
+    }
+
+    :root {
+      --sidebar-mid: #821218;
+      --gold: #c9a84c;
+      --gold-dim: #9a7a32;
+      --gold-bright: #e8c96a;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora&display=swap">
+</head>
+<body>
+  <div id="landing-box">
+    <p class="welcome-sr">
+      Добро дошли на званичну презентацију парохије Св. Василијe Велики у Хелсингборгу – Шведска<br>
+      <small>С благословом Његовог Преосвештенства Епископа британско-скандинавског Г. Доситеја</small>
+    </p>
+
+    <img class="banner" src="images/banner.jpg" alt="Српска Православна Црква – Парохија Св. Василије Велики">
+
+    <p class="welcome-sv">
+      Välkommen till hemsidan för den Serbisk Ortodoxa Kyrkan<br>
+      Hl. Basilius den Store, Helsingborg – Sverige
+    </p>
+
+    <div class="lang-choices">
+      <a class="lang-choice" href="sr/index.html">
+        <span class="flag-emoji">🇷🇸</span>
+        <span>Српски</span>
+      </a>
+      <a class="lang-choice" href="sv/index.html">
+        <span class="flag-emoji">🇸🇪</span>
+        <span>Svenska</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

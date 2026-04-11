@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gudstjänster – Serbisk Ortodoxa Kyrkan Helsingborg</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="page-wrapper">
+    <header id="site-header"></header>
+    <div id="body-layout">
+      <nav id="site-nav"></nav>
+      <main id="main-content">
+        <div class="page-heading">
+          <span class="heading-cross"></span>
+          <h2>Gudstjänstschema</h2>
+        </div>
+        <!-- Add your content here -->
+        <div id="schedule-container">
+          <p style="color:#aaa; font-style:italic;">Laddar schema...</p>
+        </div>
+
+        <script>
+        (function() {
+          const MONTHS = {
+            '01': 'Januari', '02': 'Februari', '03': 'Mars',
+            '04': 'April',   '05': 'Maj',      '06': 'Juni',
+            '07': 'Juli',    '08': 'Augusti',  '09': 'September',
+            '10': 'Oktober', '11': 'November', '12': 'December'
+          };
+
+          const DAYS = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+
+          function loadSchedule() {
+            const container = document.getElementById('schedule-container');
+            if (!container) return;
+
+            const data = window.SCHEDULE_DATA || [];
+            const currentYear = new Date().getFullYear();
+
+            const entries = data
+              .filter(e => e.date && e.service_sv && parseInt(e.date.slice(0,4)) === currentYear)
+              .map(e => ({ date: e.date, service: e.service_sv, time: e.time }));
+
+            if (entries.length === 0) {
+              container.innerHTML = '<p style="color:#aaa; font-style:italic;">Laddar schema...</p>';
+              return;
+            }
+
+            const byMonth = {};
+            entries.forEach(e => {
+              const month = e.date.slice(5, 7);
+              if (!byMonth[month]) byMonth[month] = [];
+              byMonth[month].push(e);
+            });
+
+            let html = '';
+            Object.keys(byMonth).sort().forEach(month => {
+              html += `<div class="schedule-month">${MONTHS[month] || month}</div>`;
+              html += `
+                <div class="schedule-table-wrap">
+                  <table class="schedule-table">
+                    <thead>
+                      <tr>
+                        <th>Datum</th>
+                        <th>Dag</th>
+                        <th>Gudstjänst</th>
+                        <th>Tid</th>
+                      </tr>
+                    </thead>
+                    <tbody>`;
+
+              byMonth[month].forEach(e => {
+                const day     = e.date.slice(8, 10);
+                const dayName = DAYS[new Date(e.date).getDay()];
+                html += `<tr>
+                  <td>${day}</td>
+                  <td>${dayName}</td>
+                  <td>${e.service}</td>
+                  <td>${e.time}</td>
+                </tr>`;
+              });
+
+              html += `</tbody></table></div>`;
+            });
+
+            container.innerHTML = html;
+          }
+
+          window.loadFullScheduleSv = loadSchedule;
+        })();
+        </script>
+      </main>
+      <aside id="right-sidebar"></aside>
+    </div>
+    <footer id="site-footer"></footer>
+  </div>
+  <script>
+    const LANG         = 'sv';
+    const CURRENT_PAGE = 'gudstjanster';
+  </script>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
