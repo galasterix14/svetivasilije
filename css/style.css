@@ -649,7 +649,9 @@ a:hover { text-decoration: underline; }
     flex-wrap: wrap;
     gap: 8px;
     padding: 10px 12px;
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
 
   #site-header .header-church-photo { display: none; }
@@ -692,6 +694,15 @@ a:hover { text-decoration: underline; }
   }
 
   #site-nav.nav-open { display: flex; }
+  
+  #site-nav.nav-open {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  overflow-y: auto;
+}
 
   /* Slightly bigger tap targets on mobile */
   #site-nav ul li a {
