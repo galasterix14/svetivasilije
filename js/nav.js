@@ -226,7 +226,9 @@
     const now     = new Date();
     const day     = now.getDay();
     const time    = now.getHours() + now.getMinutes() / 60;
-    const today   = now.toISOString().split('T')[0];
+    const today = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0');
 
     let openHour, closeHour, hoursLabel;
 
@@ -243,16 +245,20 @@
       openHour = 12; closeHour = 17; hoursLabel = '12:00–17:00';
     }
 
+    const openText   = currentLang === 'sr' ? 'Отворено' : 'Öppen';
+    const closedText = currentLang === 'sr' ? 'Затворено' : 'Stängt';
+    const todayText  = currentLang === 'sr' ? 'Данас' : 'Idag';
+
     if (openHour === null) {
-      return `<div class="header-hours"><span style="color:#e57373;">● Stängt</span></div>`;
+      return `<div class="header-hours"><span style="color:#e57373;">● ${closedText}</span></div>`;
     }
 
     const isOpen = time >= openHour && time < closeHour;
     const dot    = isOpen
-      ? `<span style="color:#4caf50;">● Öppet</span>`
-      : `<span style="color:#e57373;">● Stängt</span>`;
+      ? `<span style="color:#4caf50;">● ${openText}</span>`
+      : `<span style="color:#e57373;">● ${closedText}</span>`;
 
-    return `<div class="header-hours">${dot} &nbsp;Idag: ${hoursLabel}</div>`;
+    return `<div class="header-hours">${dot} &nbsp;${todayText}: ${hoursLabel}</div>`;
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -532,6 +538,14 @@
     }
   }
 
+  function updateNavTop() {
+    const header = document.getElementById('site-header');
+    const nav    = document.getElementById('site-nav');
+    if (header && nav) {
+      nav.style.setProperty('--header-actual-h', header.offsetHeight + 'px');
+    }
+  }
+
   /* ══════════════════════════════════════════════════════════════
      INIT
   ══════════════════════════════════════════════════════════════ */
@@ -551,6 +565,8 @@
     const rightEl  = document.getElementById('right-sidebar');
 
     if (headerEl) headerEl.innerHTML = buildHeader();
+    updateNavTop();
+    window.addEventListener('resize', updateNavTop);
     if (navEl)    navEl.innerHTML    = buildNav();
     if (footerEl) footerEl.innerHTML = buildFooter();
     if (rightEl)  rightEl.innerHTML  = buildRightSidebar();
