@@ -38,6 +38,24 @@ body {
   }
 }
 
+.donate-btn {
+  display: inline-block;
+  background: var(--sidebar-bg);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  padding: 10px 24px;
+  border: 2px solid var(--gold-dim);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: background 0.15s, color 0.15s;
+}
+
+.donate-btn:hover {
+  background: var(--gold);
+  color: var(--sidebar-bg);
+}
+
 /* ── Lightbox ─────────────────────────────────── */
 #lightbox {
   display: none;
@@ -361,6 +379,7 @@ body {
   line-height: 1.8;
 }
 
+
 #site-footer a {
   color: var(--gold);
   text-decoration: none;
@@ -514,7 +533,7 @@ a:hover { text-decoration: underline; }
   color: var(--gold);
   padding: 7px 10px;
   font-family: 'Cinzel', serif;
-  font-weight: 600;
+  font-weight: 800;
   text-align: left;
   font-size: 0.85rem;
 }
@@ -735,6 +754,7 @@ a:hover { text-decoration: underline; }
   right: 0;
   z-index: 99;
   overflow-y: auto;
+  max-height: calc(100vh - var(--header-actual-h, 110px));
 }
 
   /* Slightly bigger tap targets on mobile */

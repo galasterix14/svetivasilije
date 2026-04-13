@@ -66,21 +66,6 @@
                 }
               });
 
-              const lightbox    = document.getElementById('lightbox');
-              const lightboxImg = document.getElementById('lightbox-img');
-
-              container.addEventListener('click', function(e) {
-                const img = e.target.closest('.gallery-grid img');
-                if (!img) return;
-                lightboxImg.src = img.src;
-                lightbox.classList.add('open');
-              });
-
-              lightbox.addEventListener('click', function() {
-                lightbox.classList.remove('open');
-                lightboxImg.src = '';
-              });
-
             } catch(e) {
               console.error('Gallery error:', e);
               container.innerHTML = '<p style="color:#c00;">Kunde inte ladda galleriet.</p>';

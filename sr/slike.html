@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sr">
+<html lang="sv">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,107 +12,73 @@
     <div id="body-layout">
       <nav id="site-nav"></nav>
       <main id="main-content">
-        <div class="page-heading">
-          <span class="heading-cross"></span>
-          <h2>Слике и Архива</h2>
+        <div id="gallery-container">
+          <p style="color:#aaa; font-style:italic;">Учитавање галерије...</p>
         </div>
 
-        <p style="margin-bottom:16px; color:#555; font-size:0.88rem;">
-          Кликните на догађај да видите слике.
-        </p>
+        <script>
+        (function() {
+          async function loadGallery() {
+            const container = document.getElementById('gallery-container');
+            if (!container) return;
+            if (container.dataset.loaded) return;
+            container.dataset.loaded = 'true';
+            try {
+              const res = await fetch('/images/gallery.json');
+              const data = await res.json();
+              let html   = '';
 
-        <!-- ALBUM LIST — add/remove .gallery-event blocks as needed -->
+              for (const [album, images] of Object.entries(data)) {
+                const imgs = images.map(src =>
+                  `<img src="../images/${encodeURIComponent(src).replace(/%2F/g,'/')}" 
+                      alt="${album}" loading="lazy">`
+                ).join('');
 
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">27.10.2015</span>
-            <span class="gallery-event-name">Слава Кола српских сестара</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
+                html += `
+                  <div class="gallery-event">
+                    <div class="gallery-event-header">
+                      <span class="gallery-event-date"></span>
+                      <span class="gallery-event-name">${album}</span>
+                      <span class="gallery-event-arrow">&#9658;</span>
+                    </div>
+                    <div class="gallery-event-body">
+                      <div class="gallery-grid">${imgs}</div>
+                    </div>
+                  </div>`;
+              }
 
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">31.08.2015</span>
-            <span class="gallery-event-name">Монтирање рампи</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
+              container.innerHTML = html;
 
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">12.04.2015</span>
-            <span class="gallery-event-name">Васкршња Литургија</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
+              container.addEventListener('click', function(e) {
+                const header = e.target.closest('.gallery-event-header');
+                if (!header) return;
+                const clicked = header.closest('.gallery-event');
+                const isOpen  = clicked.classList.contains('open');
 
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">11.04.2015</span>
-            <span class="gallery-event-name">Васкршње јутрење</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
+                // Close all open albums
+                container.querySelectorAll('.gallery-event.open').forEach(el => {
+                  el.classList.remove('open');
+                });
 
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">10.04.2015</span>
-            <span class="gallery-event-name">Велики петак</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
+                // If it wasn't open before, open it
+                if (!isOpen) {
+                  clicked.classList.add('open');
+                }
+              });
 
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">31.01.2015</span>
-            <span class="gallery-event-name">Прослава Св. Саве</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
+            } catch(e) {
+              console.error('Gallery error:', e);
+              container.innerHTML = '<p style="color:#c00;">Галерија тренутно није доступна.</p>';
+            }
+          }
 
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">17.01.2015</span>
-            <span class="gallery-event-name">Црквена слава</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
-
-        <div class="gallery-event">
-          <div class="gallery-event-header">
-            <span class="gallery-event-date">06.01.2015</span>
-            <span class="gallery-event-name">Бадњи дан</span>
-            <span class="gallery-event-arrow">&#9658;</span>
-          </div>
-          <div class="gallery-event-body">
-            <p>Слике ускоро.</p>
-          </div>
-        </div>
-
-        <!-- Add more events above this comment -->
-
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadGallery);
+          } else {
+            loadGallery();
+          }
+        })();
+        </script>
       </main>
       <aside id="right-sidebar"></aside>
     </div>

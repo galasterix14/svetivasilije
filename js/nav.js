@@ -194,7 +194,7 @@
       { id: 'raspored',     label: 'Распоред Служби',       href: 'raspored.html' },
       { id: 'odbor',        label: 'Одбор / КСС / Хор',    href: 'odbor.html' },
       { id: 'slike',        label: 'Слике и Архива',        href: 'slike.html' },
-      { id: 'linkovi',      label: 'Линкови',               href: 'linkovi.html' },
+      //{ id: 'linkovi',      label: 'Линкови',               href: 'linkovi.html' },
       { id: 'prilozhnici',  label: 'Приложници',            href: 'prilozhnici.html' },
       { id: 'ponasanje',    label: 'Понашање у цркви',      href: 'ponasanje.html' },
       { id: 'molitve',      label: 'Молитве',               href: 'molitve.html' },
@@ -329,11 +329,11 @@
       <div class="lang-flags">
         <a href="${srUrl}" title="Српски">
           <img src="${root}images/flag_sr.png" alt="Српски"
-               onerror="this.outerHTML='<span style=&quot;font-size:1.3rem;cursor:pointer&quot; title=&quot;Српски&quot;>🇷🇸</span>'">
+               onerror="this.outerHTML='<span style=&quot;font-size:2rem;cursor:pointer&quot; title=&quot;Српски&quot;>🇷🇸</span>'">
         </a>
         <a href="${svUrl}" title="Svenska">
           <img src="${root}images/flag_sv.png" alt="Svenska"
-               onerror="this.outerHTML='<span style=&quot;font-size:1.3rem;cursor:pointer&quot; title=&quot;Svenska&quot;>🇸🇪</span>'">
+               onerror="this.outerHTML='<span style=&quot;font-size:2rem;cursor:pointer&quot; title=&quot;Svenska&quot;>🇸🇪</span>'">
         </a>
       </div>`;
 
@@ -364,7 +364,16 @@
   ══════════════════════════════════════════════════════════════ */
 
   function buildFooter() {
-    return `
+    const isSerbian = currentLang === 'sr';
+    return isSerbian ? `
+      Св. Василије Велики у Хелсингборгу &nbsp;|&nbsp;
+      Nedre Eneborgs vägen 7, 252 68 Helsingborg, Sverige<br>
+      Тел/факс: <a href="tel:+4642181736">+46 42 181 736</a>
+      &nbsp;|&nbsp;
+      Е-маил: <a href="mailto:info@svetivasilije.se">info@svetivasilije.se</a>
+      &nbsp;|&nbsp;
+      <a href="https://www.svetivasilije.se">www.svetivasilije.se</a>
+    ` : `
       Serbisk Ortodoxa Kyrkan &nbsp;|&nbsp;
       Nedre Eneborgs vägen 7, 252 68 Helsingborg, Sverige<br>
       Tel/fax: <a href="tel:+4642181736">+46 42 181 736</a>
@@ -580,6 +589,14 @@
       lb.addEventListener('click', function() {
         lb.classList.remove('open');
         document.getElementById('lightbox-img').src = '';
+      });
+
+      // Gallery image clicks — document level so timing doesn't matter
+      document.addEventListener('click', function(e) {
+        const img = e.target.closest('.gallery-grid img');
+        if (!img) return;
+        document.getElementById('lightbox-img').src = img.src;
+        lb.classList.add('open');
       });
     }
 
