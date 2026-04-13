@@ -36,6 +36,54 @@ body {
     justify-content: center;
     margin: 20px 0;
   }
+
+  .banner-img {
+    max-width: 100%;
+  }
+
+  .image-contact {
+    flex-direction: column;
+  }
+}
+
+.image-contact {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+
+.image-contact img {
+  width: 230px;
+  height: auto;
+  flex-shrink: 0;
+  border: 3px solid var(--border);
+  margin-top: 15px;
+}
+
+.image-contact-blocks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .image-contact {
+    flex-direction: column;
+  }
+
+  .image-contact img {
+    width: 60%;
+  }
+}
+
+.banner-img {
+  width: 100%;
+  max-width: 380px;
+  display: block;
+  margin: 16px auto;
+  margin-top: -70px;
 }
 
 .donate-btn {
@@ -98,6 +146,10 @@ body {
 
   #site-nav {
     overflow-y: auto;
+  }
+
+  .banner-img {
+    display: none;
   }
 }
 
