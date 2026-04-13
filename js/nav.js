@@ -463,6 +463,7 @@
 
       // Scroll content area back to top
       mainEl.scrollTop = 0;
+      window.scrollTo(0, 0);
 
     } catch (err) {
       // Fallback: just navigate normally if fetch fails
