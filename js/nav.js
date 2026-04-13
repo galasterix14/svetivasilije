@@ -561,14 +561,8 @@
   ══════════════════════════════════════════════════════════════ */
 
   document.addEventListener('DOMContentLoaded', async function () {
-    // Load Google Sheet overrides first
-    await Promise.all([loadSheetOverrides(), loadScheduleData()]);
-    if (typeof window.loadThisWeek === 'function') window.loadThisWeek();
-    if (typeof window.loadThisWeekSr === 'function') window.loadThisWeekSr();
-    if (typeof window.loadFullScheduleSv === 'function') window.loadFullScheduleSv();
-    if (typeof window.loadFullScheduleSr === 'function') window.loadFullScheduleSr();
 
-    // Inject shell elements
+    // ── Inject shell IMMEDIATELY — no waiting ──
     const headerEl = document.getElementById('site-header');
     const navEl    = document.getElementById('site-nav');
     const footerEl = document.getElementById('site-footer');
@@ -581,7 +575,7 @@
     if (footerEl) footerEl.innerHTML = buildFooter();
     if (rightEl)  rightEl.innerHTML  = buildRightSidebar();
 
-    // Inject lightbox once
+    // Inject lightbox
     if (!document.getElementById('lightbox')) {
       const lb = document.createElement('div');
       lb.id = 'lightbox';
@@ -591,8 +585,6 @@
         lb.classList.remove('open');
         document.getElementById('lightbox-img').src = '';
       });
-
-      // Gallery image clicks — document level so timing doesn't matter
       document.addEventListener('click', function(e) {
         const img = e.target.closest('.gallery-grid img');
         if (!img) return;
@@ -601,17 +593,32 @@
       });
     }
 
-    // Wire up interactions
+    // Wire up interactions immediately
     attachNavListeners();
     attachHamburger();
     initContentScripts();
 
-    // Push initial state so back button works from first page
     history.replaceState(
       { href: window.location.pathname, lang: currentLang, page: currentPage },
       '',
       window.location.pathname
     );
+
+    // ── Fetch sheet data in background ──
+    await Promise.all([loadSheetOverrides(), loadScheduleData()]);
+
+    // Update open/closed status in header now that sheet data is loaded
+    if (headerEl) {
+      const hoursEl = headerEl.querySelector('.header-hours');
+      if (hoursEl) hoursEl.outerHTML = getOpenStatus();
+    }
+
+    // Run schedule functions now that data is available
+    if (typeof window.loadThisWeek === 'function') window.loadThisWeek();
+    if (typeof window.loadThisWeekSr === 'function') window.loadThisWeekSr();
+    if (typeof window.loadFullScheduleSv === 'function') window.loadFullScheduleSv();
+    if (typeof window.loadFullScheduleSr === 'function') window.loadFullScheduleSr();
+
   });
 
 })();
