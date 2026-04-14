@@ -170,12 +170,12 @@
   const NAV = {
     sv: [
       { id: 'home',         label: 'Startsida',            href: 'index.html' },
+      { id: 'gudstjanster', label: 'Gudstjänster',          href: 'gudstjanster.html' },
       { id: 'historia',     label: 'Historia',              href: 'historia.html' },
       { id: 'fakta',        label: 'Fakta',                 href: 'fakta.html' },
       //{ id: 'kyrkan',       label: 'Kyrkan & Församlingen', href: 'kyrkan.html' },
       //{ id: 'biskop',       label: 'Biskop',                href: 'biskop.html' },
       { id: 'prost',        label: 'Präst',                 href: 'prost.html' },
-      { id: 'gudstjanster', label: 'Gudstjänster',          href: 'gudstjanster.html' },
       //{ id: 'styrelse',     label: 'Styrelse / KSS / Kör',  href: 'styrelse.html' },
       { id: 'galleri',      label: 'Bilder & Arkiv',        href: 'galleri.html' },
       //{ id: 'lankar',       label: 'Länkar',                href: 'lankar.html' },
@@ -187,11 +187,11 @@
     ],
     sr: [
       { id: 'home',         label: 'Почетна',               href: 'index.html' },
+      { id: 'raspored',     label: 'Распоред Служби',       href: 'raspored.html' },
       { id: 'istorijat',    label: 'Историјат',             href: 'istorijat.html' },
       { id: 'crkva',        label: 'Црква и парохија',      href: 'crkva.html' },
       { id: 'episkop',      label: 'Епископ',               href: 'episkop.html' },
       { id: 'svestenik',    label: 'Свештеник',             href: 'svestenik.html' },
-      { id: 'raspored',     label: 'Распоред Служби',       href: 'raspored.html' },
       { id: 'odbor',        label: 'Одбор / КСС / Хор',    href: 'odbor.html' },
       { id: 'slike',        label: 'Слике и Архива',        href: 'slike.html' },
       //{ id: 'linkovi',      label: 'Линкови',               href: 'linkovi.html' },
@@ -245,7 +245,7 @@
       openHour = 12; closeHour = 17; hoursLabel = '12:00–17:00';
     }
 
-    const openText   = currentLang === 'sr' ? 'Отворено' : 'Öppen';
+    const openText   = currentLang === 'sr' ? 'Отворено' : 'Öppet';
     const closedText = currentLang === 'sr' ? 'Затворено' : 'Stängt';
     const todayText  = currentLang === 'sr' ? 'Данас' : 'Idag';
 

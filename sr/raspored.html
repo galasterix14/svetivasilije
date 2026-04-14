@@ -56,7 +56,11 @@
             });
 
             let html = '';
-            Object.keys(byMonth).sort().forEach(month => {
+            const now = new Date();
+            const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+            const currentYear2 = String(now.getFullYear());
+
+            Object.keys(byMonth).sort().filter(month => month >= currentMonth).forEach(month => {
               html += `<div class="schedule-month">${MONTHS[month] || month}</div>`;
               html += `
                 <div class="schedule-table-wrap">
