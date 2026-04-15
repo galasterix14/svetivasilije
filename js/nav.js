@@ -293,7 +293,7 @@
 
     return `
       <img class="header-crest"
-           src="${root}images/crest.jpg"
+           src="${root}images/coatofarms.png"
            alt="Serbisk Ortodox Kyrka – vapensköld">
       ${titleHtml}
       <img class="header-church-photo"
