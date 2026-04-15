@@ -328,11 +328,11 @@
     const flags = `
       <div class="lang-flags">
         <a href="${srUrl}" title="Српски">
-          <img src="${root}images/flag_sr.png" alt="Српски"
+          <img src="${root}images/flag_sr.svg" alt="Српски"
                onerror="this.outerHTML='<span style=&quot;font-size:2rem;cursor:pointer&quot; title=&quot;Српски&quot;>🇷🇸</span>'">
         </a>
         <a href="${svUrl}" title="Svenska">
-          <img src="${root}images/flag_sv.png" alt="Svenska"
+          <img src="${root}images/flag_sv.svg" alt="Svenska"
                onerror="this.outerHTML='<span style=&quot;font-size:2rem;cursor:pointer&quot; title=&quot;Svenska&quot;>🇸🇪</span>'">
         </a>
       </div>`;

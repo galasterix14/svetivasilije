@@ -363,8 +363,8 @@ body {
 }
 
 #site-nav .lang-flags img {
-  width: 34px;
-  height: 22px;
+  width: 50px;
+  height: 34px;
   object-fit: cover;
   border: 1px solid var(--gold-dim);
   cursor: pointer;
@@ -820,7 +820,7 @@ a:hover { text-decoration: underline; }
     gap: 14px;
   }
 
-  #site-nav .lang-flags img { width: 38px; height: 24px; }
+  #site-nav .lang-flags img { width: 42px; height: 28px; }
 
   /* Content fills full width */
   #main-content {
