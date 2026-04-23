@@ -44,6 +44,11 @@ body {
   .image-contact {
     flex-direction: column;
   }
+
+  .kcc-image {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .image-contact {
