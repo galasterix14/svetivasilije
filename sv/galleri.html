@@ -24,7 +24,7 @@
             if (container.dataset.loaded) return;
             container.dataset.loaded = 'true';
             try {
-              const res = await fetch('/images/gallery.json');
+              const res = await fetch('/images/gallery_swedish.json');
               const data = await res.json();
               let html   = '';
 
