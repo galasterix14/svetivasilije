@@ -88,7 +88,6 @@ body {
   max-width: 380px;
   display: block;
   margin: 16px auto;
-  margin-top: -70px;
 }
 
 .donate-btn {
@@ -225,22 +224,38 @@ body {
 
 .week-grid {
   display: flex;
+  flex-direction: column; /* stacked by default at every viewport width */
   gap: 20px;
   align-items: flex-start;
 }
 
 .week-grid > div {
   flex: 1;
+  width: 100%;
 }
 
-.week-grid > div:first-child {
-  flex: 2; /* liturgies table gets more space */
-}
-
-@media (max-width: 600px) {
+/* Only go side-by-side once #main-content itself has enough room for both
+   tables without squeezing — this responds to the real content width, so
+   it stays correct whether the left nav / right Facebook sidebar are
+   showing or not, instead of guessing a single viewport breakpoint.
+   The threshold (1000px) has real headroom above the ~880px the two
+   capped tables below actually need, so it doesn't sit right on the
+   edge of wrapping/clipping the way 860px did. */
+@container (min-width: 1000px) {
   .week-grid {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between; /* extra room becomes a gap between the
+                                        two tables, not stretched-out columns
+                                        with awkward blank space in them */
   }
+
+  .week-grid > div {
+    width: auto;
+    flex: 0 0 auto; /* fixed width below, don't grow or shrink */
+  }
+
+  .week-grid > div:first-child { width: 480px; }
+  .week-grid > div:last-child  { width: 380px; }
 }
 
 /* ── Body layout ─────────────────────────────────── */
@@ -275,8 +290,10 @@ body {
   font-size: 0.8rem;
 }
 
-/* Hide on mobile */
-@media (max-width: 800px) {
+/* Hide on mobile/tablet, and on narrower desktop widths where the
+   fixed 230px nav + 350px sidebar would otherwise squeeze the main
+   content column down to a couple hundred pixels */
+@media (max-width: 1100px) {
   #right-sidebar { display: none; }
 }
 
@@ -385,6 +402,9 @@ body {
   padding: 28px 30px 40px;
   min-height: 500px;
   overflow-y: auto;
+  container-type: inline-size; /* lets children (e.g. .week-grid) respond to
+                                   the actual available content width, not
+                                   the viewport width — see @container rule */
 }
 
 /* Page heading with cross */
@@ -486,7 +506,7 @@ a:hover { text-decoration: underline; }
 .schedule-table td:nth-child(1) { width: 80px; }
 
 .schedule-table th:nth-child(2),
-.schedule-table td:nth-child(2) { width: 130px; }
+.schedule-table td:nth-child(2) { width: 95px; }
 
 .schedule-table th:nth-child(3),
 .schedule-table td:nth-child(3) { width: auto; }
@@ -731,42 +751,33 @@ a:hover { text-decoration: underline; }
 #nav-toggle.open span:nth-child(2) { opacity: 0; }
 #nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ── Tablet (≤ 800px) ─────────────────────────────── */
+/* ── Tablet & below (≤ 800px) ─────────────────────────────── */
+/* This is the "layout mode" breakpoint: hamburger nav + full-width
+   content kicks in here so that tablet-width screens (601-800px)
+   aren't squeezed by the fixed 230px sidebar nav — previously that
+   only happened at ≤600px, leaving 601-800px screens with a cramped
+   ~400px-wide content column. Font-size/table-compacting tweaks for
+   narrow phones stay in the ≤600px block further down. */
 @media (max-width: 800px) {
-  #site-header {
-    padding: 8px 12px;
-    gap: 10px;
-    min-height: auto;
-  }
-
-  #site-header .header-crest        { height: 64px; width: 64px; }
-  #site-header .header-church-photo { height: 64px; width: 88px; }
-
-  #site-header .header-title h1     { font-size: 1.05rem; }
-  #site-header .header-title .subtitle { font-size: 0.85rem; }
-}
-
-/* ── Mobile (≤ 600px) ─────────────────────────────── */
-@media (max-width: 600px) {
-
-  /* Show hamburger, hide nothing else yet */
   #nav-toggle { display: flex; }
 
-  /* Header: crest + title + hamburger, no church photo */
   #site-header {
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px 12px;
+    gap: 10px;
+    padding: 8px 12px;
     position: sticky;
     top: 0;
     z-index: 100;
+    min-height: 96px; /* reserve space so the header doesn't collapse to ~20px
+                          before nav.js populates it — prevents content below
+                          (which uses negative margins) from flashing above it */
   }
 
+  #site-header .header-crest        { height: 64px; width: 64px; }
   #site-header .header-church-photo { display: none; }
 
-  #site-header .header-title h1     { font-size: 0.95rem; }
-  #site-header .header-title .subtitle { font-size: 0.78rem; }
-  #site-header .header-crest        { height: 52px; width: 52px; }
+  #site-header .header-title h1     { font-size: 1.05rem; }
+  #site-header .header-title .subtitle { font-size: 0.85rem; }
 
   /* Body layout becomes vertical */
   #body-layout { flex-direction: column; }
@@ -783,37 +794,18 @@ a:hover { text-decoration: underline; }
     overflow: hidden;
   }
 
-  /* Schedule table on mobile — hide Day column, adjust widths */
-  .schedule-table th:nth-child(1),
-  .schedule-table td:nth-child(1) { width: 55px; }
-
-  .schedule-table th:nth-child(2),
-  .schedule-table td:nth-child(2) { display: none; }
-
-  .schedule-table th:nth-child(3),
-  .schedule-table td:nth-child(3) { width: auto; }
-
-  .schedule-table th:nth-child(4),
-  .schedule-table td:nth-child(4) { width: 75px; text-align: center; }
-
-  #week-hours-container .schedule-table td:nth-child(3),
-  #week-hours-container .schedule-table th:nth-child(3) {
-    text-align: right;
+  #site-nav.nav-open {
+    display: flex;
+    position: fixed;
+    top: var(--header-actual-h, 130px);
+    left: 0;
+    right: 0;
+    z-index: 99;
+    overflow-y: auto;
+    max-height: calc(100vh - var(--header-actual-h, 110px));
   }
 
-  #site-nav.nav-open { display: flex; }
-  
-  #site-nav.nav-open {
-  position: fixed;
-  top: var(--header-actual-h, 130px);
-  left: 0;
-  right: 0;
-  z-index: 99;
-  overflow-y: auto;
-  max-height: calc(100vh - var(--header-actual-h, 110px));
-}
-
-  /* Slightly bigger tap targets on mobile */
+  /* Slightly bigger tap targets for touch */
   #site-nav ul li a {
     padding: 11px 16px;
     font-size: 0.95rem;
@@ -829,6 +821,41 @@ a:hover { text-decoration: underline; }
   /* Content fills full width */
   #main-content {
     padding: 20px 16px 32px;
+  }
+}
+
+/* ── Mobile (≤ 600px) ─────────────────────────────── */
+/* Narrow-phone-only compacting: smaller type, tighter header,
+   and a slimmed-down schedule table. Layout-mode rules (hamburger
+   nav, overlay, full-width content) already kick in at ≤800px above. */
+@media (max-width: 600px) {
+
+  /* Header: crest + title + hamburger get a bit tighter still */
+  #site-header {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  #site-header .header-title h1     { font-size: 0.95rem; }
+  #site-header .header-title .subtitle { font-size: 0.78rem; }
+  #site-header .header-crest        { height: 52px; width: 52px; }
+
+  /* Schedule table on narrow phones — hide Day column, adjust widths */
+  .schedule-table th:nth-child(1),
+  .schedule-table td:nth-child(1) { width: 55px; }
+
+  .schedule-table th:nth-child(2),
+  .schedule-table td:nth-child(2) { display: none; }
+
+  .schedule-table th:nth-child(3),
+  .schedule-table td:nth-child(3) { width: auto; }
+
+  .schedule-table th:nth-child(4),
+  .schedule-table td:nth-child(4) { width: 75px; text-align: center; }
+
+  #week-hours-container .schedule-table td:nth-child(3),
+  #week-hours-container .schedule-table th:nth-child(3) {
+    text-align: right;
   }
 
   /* Page heading smaller */

@@ -222,7 +222,7 @@
      OPEN STATUS
   ══════════════════════════════════════════════════════════════ */
 
-  function getOpenStatus() {
+  function getOpenStatusInner() {
     const now     = new Date();
     const day     = now.getDay();
     const time    = now.getHours() + now.getMinutes() / 60;
@@ -250,7 +250,7 @@
     const todayText  = currentLang === 'sr' ? 'Данас' : 'Idag';
 
     if (openHour === null) {
-      return `<div class="header-hours"><span style="color:#e57373;">● ${closedText}</span></div>`;
+      return `<span style="color:#e57373;">● ${closedText}</span>`;
     }
 
     const isOpen = time >= openHour && time < closeHour;
@@ -258,7 +258,11 @@
       ? `<span style="color:#4caf50;">● ${openText}</span>`
       : `<span style="color:#e57373;">● ${closedText}</span>`;
 
-    return `<div class="header-hours">${dot} &nbsp;${todayText}: ${hoursLabel}</div>`;
+    return `${dot} &nbsp;${todayText}: ${hoursLabel}`;
+  }
+
+  function getOpenStatus() {
+    return `<div class="header-hours">${getOpenStatusInner()}</div>`;
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -607,10 +611,14 @@
     // ── Fetch sheet data in background ──
     await Promise.all([loadSheetOverrides(), loadScheduleData()]);
 
-    // Update open/closed status in header now that sheet data is loaded
+    // Update open/closed status in header now that sheet data is loaded.
+    // Uses innerHTML (not outerHTML) so the .header-hours node itself is
+    // never removed/recreated — replacing nodes inside a position:sticky
+    // header after the initial paint is a known trigger for iOS Safari
+    // repaint glitches.
     if (headerEl) {
       const hoursEl = headerEl.querySelector('.header-hours');
-      if (hoursEl) hoursEl.outerHTML = getOpenStatus();
+      if (hoursEl) hoursEl.innerHTML = getOpenStatusInner();
     }
 
     // Run schedule functions now that data is available
