@@ -624,6 +624,14 @@
     // Run schedule functions now that data is available
     if (typeof window.loadThisWeek === 'function') window.loadThisWeek();
     if (typeof window.loadThisWeekSr === 'function') window.loadThisWeekSr();
+
+    // Re-render the weekly hours table too — it initially renders on
+    // DOMContentLoaded, before this fetch has had time to resolve, so it
+    // needs a second pass here once SPECIAL_HOURS actually has the sheet's
+    // overrides merged in (otherwise it's stuck showing default hours
+    // forever, e.g. never picking up a Saturday-hours override row).
+    if (typeof window.getWeekHours === 'function') window.getWeekHours();
+    if (typeof window.getWeekHoursSr === 'function') window.getWeekHoursSr();
     if (typeof window.loadFullScheduleSv === 'function') window.loadFullScheduleSv();
     if (typeof window.loadFullScheduleSr === 'function') window.loadFullScheduleSr();
 
